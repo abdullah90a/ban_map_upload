@@ -1,0 +1,12 @@
+html
+  head
+    title= city.city
+  body
+    h1 Data on"#{city.city}"
+
+  table
+    - var cityKeys = Object.keys(city)
+    - for (var x = 0; x < cityKeys.length; x++)
+        tr
+            td #{cityKeys[x]}
+            td #{city[cityKeys[x]]}

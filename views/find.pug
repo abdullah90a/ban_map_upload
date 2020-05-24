@@ -1,0 +1,8 @@
+html
+  head
+    title= "Search Results"
+  body
+    h1 Search results for "#{searchString}"
+    - for (var x = 0; x < cities.length; x++)
+      li
+        a(href="view/" + cities[x]._id) #{cities[x].city}
