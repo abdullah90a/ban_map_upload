@@ -12,7 +12,7 @@ client.connect(function(err) {
     const db = client.db("banDB");
     const collection = db.collection('cities');
 
-    collection.find({'_id': ObjectID("5ec9603eeb5f38d1de72c93e")}).toArray(function(err, docs) {
+    collection.find({'city': "South Creek"}).toArray(function(err, docs) {
         assert.equal(err, null);
         console.log("Found the following records");
         console.log(docs);

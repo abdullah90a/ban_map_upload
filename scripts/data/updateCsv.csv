@@ -1,0 +1,2 @@
+city,city_ascii,state_id,state_name,county_fips,county_name,county_fips_all,county_name_all,lat,lng,population,density,source,military,incorporated,timezone,ranking,zips,id,hullo
+South Creek1,South Creek,WA,Washington,53053,Pierce,53053,Pierce,46.9994,-122.3921,2500,125,polygon,FALSE,TRUE,America/Los_Angeles,3,98580 98387 98338,1840042075,world

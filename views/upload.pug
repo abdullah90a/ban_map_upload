@@ -1,0 +1,14 @@
+html
+  head
+    title Upload
+    link(rel="stylesheet" href="/stylesheets/style.css")
+  body
+    h1 Upload Complete!
+
+  if(errors.length > 0)
+      h3 We found the following errors in the uploaded document:
+      table
+          - for (var x = 0; x < errors.length; x++)
+              tr
+                td Line #{x + 1}
+                td #{errors[x]}

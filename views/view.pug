@@ -1,12 +1,17 @@
 html
   head
     title= city.city
+    link(rel="stylesheet" href="/stylesheets/style.css")
   body
-    h1 Data on"#{city.city}"
+    h1 Data on #{city.city}, #{city.state_name}
 
-  table
-    - var cityKeys = Object.keys(city)
-    - for (var x = 0; x < cityKeys.length; x++)
-        tr
-            td #{cityKeys[x]}
-            td #{city[cityKeys[x]]}
+  form(method="post" action="/update")
+    table
+        - var cityKeys = Object.keys(city).filter(key => key.length > 0)
+        - for (var x = 0; x < cityKeys.length; x++)
+            tr
+                td
+                    label(for=cityKeys[x]) #{cityKeys[x]}
+                td
+                    input(id=cityKeys[x] name=cityKeys[x] type="text" value=city[cityKeys[x]])
+    input(type="submit" value="Update City Data")

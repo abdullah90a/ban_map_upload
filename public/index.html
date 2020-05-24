@@ -12,6 +12,11 @@
     <input type="text"  name="citySearchString" id="citySearchString" placeholder="City Name"/>
     <input type="submit"  value="Find">
   </form>
+  <form action="upload" method="post" class="uploadForm" enctype="multipart/form-data">
+    <label for="updateCsv">Update City Data</label>
+    <input type="file"  name="updateCsv" id="updateCsv" placeholder="CSVs only please..." required/>
+    <input type="submit"  value="Upload">
+  </form>
   <script src="javascripts/script.js"></script>
 </body>
 
