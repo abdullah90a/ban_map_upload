@@ -10,10 +10,10 @@ const client = new MongoClient(mongoURI);
 
 const diskStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads')
+    cb(null, 'public/uploads');
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname)
+    cb(null, file.fieldname);
   }
 });
 const dataFile = "public/uploads/data";
@@ -47,7 +47,7 @@ router.post("/map", upload.fields([
     const newType = req.body.type;
     const db = client.db("banDB");
 
-    fs.rename(markerFile, `public/markers/${newType}`, err => console.log(err));
+    fs.rename(markerFile, `public/markers/${newType}.png`, err => console.log(err));
     const typeNameCollection = db.collection("types");
     typeNameCollection.insertOne({ type: newType });
 
