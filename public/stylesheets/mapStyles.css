@@ -2,6 +2,10 @@
     height: 500px;
 }
 
+#types {
+    margin-top: 1rem;
+}
+
 .info {
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
