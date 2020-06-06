@@ -49,7 +49,11 @@ router.post("/map", upload.fields([
 
     fs.rename(markerFile, `public/markers/${newType}.png`, err => console.log(err));
     const typeNameCollection = db.collection("types");
-    typeNameCollection.insertOne({ type: newType });
+    typeNameCollection.find({ type: newType }).toArray((err, docs) => {
+      if(docs.length === 0) {
+        typeNameCollection.insertOne({ type: newType });
+      }
+    });
 
     const newCollection = db.collection(newType);
     const cityCollection = db.collection("cities")
@@ -62,7 +66,7 @@ router.post("/map", upload.fields([
               if(docs.length > 0) {
                 data.lat = docs[0].lat;
                 data.lng = docs[0].lng;
-                newCollection.insertOne(data, err => console.log(err));
+                newCollection.updateOne({ lat: data.lat, lng: data.lng }, { $set: data }, { upsert: true });
               }
             });
         })
@@ -70,6 +74,27 @@ router.post("/map", upload.fields([
           fs.unlinkSync(dataFile);
           typeNameCollection.find().toArray((err, docs) => res.render("map", { types: docs }));
         });
+  });
+});
+
+router.get("/deleteType/:typeName", (req, res) => {
+  client.connect((err) => {
+    const typeName = req.params.typeName;
+    const db = client.db("banDB");
+
+    fs.unlinkSync(`public/markers/${typeName}.png`);
+    db.collection(typeName).drop();
+    db.collection("types").deleteOne({type: typeName});
+    res.send("Deletion in progress...");
+  });
+});
+
+router.get("/deleteItem/:typeName/:itemId", (req, res) => {
+  client.connect((err) => {
+    const db = client.db("banDB");
+
+    db.collection(req.params.typeName).deleteOne({ _id: ObjectID(req.params.itemId) });
+    res.send("Deletion in progress...");
   });
 });
 

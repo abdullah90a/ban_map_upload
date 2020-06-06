@@ -10,9 +10,9 @@ info.onAdd = function () {
 };
 info.addTo(MAP);
 
-const TYPE_SELECTOR = document.getElementById("typeSelect");
+const TYPE_SELECTOR = document.getElementById('typeSelect');
 let SELECTED_TYPE = undefined;
-TYPE_SELECTOR.addEventListener("change", evt => {
+TYPE_SELECTOR.addEventListener('change', evt => {
     SELECTED_TYPE = evt.target.value;
     getTypeData();
 });
@@ -20,7 +20,7 @@ TYPE_SELECTOR.addEventListener("change", evt => {
 function getTypeData() {
     const request = new XMLHttpRequest();
     request.onload = mapData;
-    request.open("GET", `http://127.0.0.1:3000/nuUpload/types/${SELECTED_TYPE}`);
+    request.open('GET', `http://127.0.0.1:3000/nuUpload/types/${SELECTED_TYPE}`);
     request.send();
 }
 
@@ -40,9 +40,9 @@ function mapData() {
             })
         });
 
-        const keysToRender = Object.keys(datum).filter(key => !(["_id", "lat", "lng"].includes(key)));
+        const keysToRender = Object.keys(datum).filter(key => !(['_id', 'lat', 'lng'].includes(key)));
         marker.on('click', () => {
-            let updateString = "";
+            let updateString = '';
             keysToRender.forEach(key => {
                 updateString += `<h4>${key}</h4><span>${datum[key]}</span>`;
             });
