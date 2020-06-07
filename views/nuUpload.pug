@@ -5,7 +5,7 @@ html
     body
         h1 Upload New Data
 
-    form(method="post" action="map" enctype="multipart/form-data")
+    form(method="post" action="nuUpload/map" enctype="multipart/form-data")
         div(class="nuUploadDiv")
             label(class="nuUploadLabel" for="type") Data Type
             input(type="text" id="type" name="type")
@@ -17,3 +17,5 @@ html
             input(type="file" id="marker" name="marker")
         div(class="nuUploadDiv")
             input(type="submit" value="Upload")
+
+    a(href="/nuUpload/upsert") Add/Update a Data Type

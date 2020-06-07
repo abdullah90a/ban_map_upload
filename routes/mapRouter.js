@@ -23,12 +23,16 @@ const upload = multer({ storage: diskStorage });
 
 router.get("/", (req, res) => res.render("nuUpload"));
 
-router.get("/map", (req, res) => {
+function respondWithTypes(res, viewName) {
   client.connect(err => {
     const db = client.db("banDB");
     const typeNameCollection = db.collection("types");
-    typeNameCollection.find().toArray((err, docs) => res.render("map", { types: docs }));
+    typeNameCollection.find().toArray((err, docs) => res.render(viewName, {types: docs}));
   });
+}
+
+router.get("/map", (req, res) => {
+  respondWithTypes(res, "map");
 });
 
 router.get("/types/:typeName", (req, res) => {
@@ -96,6 +100,14 @@ router.get("/deleteItem/:typeName/:itemId", (req, res) => {
     db.collection(req.params.typeName).deleteOne({ _id: ObjectID(req.params.itemId) });
     res.send("Deletion in progress...");
   });
+});
+
+router.get("/upsert", (req, res) => {
+  respondWithTypes(res, "upsert");
+});
+
+router.post("/upsert", (req, res) => {
+  console.log(req.body);
 });
 
 module.exports = router;
