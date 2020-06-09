@@ -1,0 +1,25 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+li {
+    margin-top: 1rem;
+}
+
+#upsertForm {
+    margin-top: 2rem;
+}
+
+.nuUpsertTable {
+    border: 1px solid black;
+    margin-bottom: 2rem;
+}
+
+.nuUpsertRow {
+    margin-bottom: 0.5rem;
+}
+
+.nuUpsertLabel {
+    margin-right: 1rem;
+}

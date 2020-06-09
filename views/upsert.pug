@@ -1,0 +1,17 @@
+html
+    head
+        title Add/Update Items
+        link(rel="stylesheet" href="/stylesheets/upsertStyles.css")
+    body
+        h1 Add or Update Data Type Items
+
+        select(name="typeSelect" id="upsertTypeSelect")
+            option(value="invalid") Please select a data type to modify
+            - for (var counter = 0; counter < types.length; counter++)
+                option(value=types[counter].type) #{types[counter].type}
+
+        form(id="upsertForm" method="post" action="upsert")
+            div(id="inputFields")
+            input(type="submit" value="Update")
+
+        script(src="/javascripts/upsertScript.js")

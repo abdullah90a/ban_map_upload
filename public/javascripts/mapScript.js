@@ -1,12 +1,10 @@
-let MARKERS = [];
-let MAP_DATA = undefined;
-let SELECTED_TYPE = undefined;
+const TYPES_TO_SHOW = [];
 
 const MAP = L.map('map').setView([38, -95], 4);
 L.tileLayer.provider('CartoDB.Positron').addTo(MAP);
 
 const info = L.control();
-info.update = function (content) { this._div.innerHTML = (content ? content : '<h5>' + 'Click on something!' + '</h5>'); };
+info.update = function (content) { this._div.innerHTML = (content ? content : ""); };
 info.onAdd = function () {
     this._div = L.DomUtil.create('div', 'info smaller-info');
     this.update();
@@ -16,26 +14,33 @@ info.addTo(MAP);
 
 const TYPE_SELECTOR = document.getElementById('typeSelect');
 TYPE_SELECTOR.addEventListener('change', evt => {
-    SELECTED_TYPE = evt.target.value;
-    getTypeData();
+    let selectedType = evt.target.value;
+    let indexOfExisting = TYPES_TO_SHOW.findIndex(type => type.name === selectedType);
+    let typeDataHolder = { name: selectedType, markers: [] };
+
+    if (indexOfExisting >= 0) {
+        TYPES_TO_SHOW[indexOfExisting].markers.forEach(marker => marker.remove());
+        TYPES_TO_SHOW.splice(indexOfExisting, 1);
+    }
+    TYPES_TO_SHOW.push(typeDataHolder);
+
+    getTypeData(selectedType, typeDataHolder);
 });
 
-function getTypeData() {
+function getTypeData(selectedType, typeDataHolder) {
     const request = new XMLHttpRequest();
+    request.typeDataHolder = typeDataHolder;
+    request.selectedType = selectedType;
     request.onload = mapData;
-    request.open('GET', `http://127.0.0.1:3000/nuUpload/types/${SELECTED_TYPE}`);
+    request.open('GET', `http://127.0.0.1:3000/types/${selectedType}`);
     request.send();
 }
 
 function mapData() {
-    MAP_DATA = JSON.parse(this.responseText);
-
-    MARKERS.forEach(marker => marker.remove());
-    MARKERS = [];
-    MAP_DATA.forEach(datum => {
+    JSON.parse(this.responseText).forEach((datum, index) => {
         const marker = L.marker([datum.lat, datum.lng], {
             icon: L.icon({
-                iconUrl: `http://127.0.0.1:3000/markers/${SELECTED_TYPE}.png`,
+                iconUrl: `http://127.0.0.1:3000/markers/${this.selectedType}.png`,
 
                 iconSize:     [40, 30], // size of the icon
                 iconAnchor:   [30, 20], // point of the icon which will correspond to marker's location
@@ -44,58 +49,62 @@ function mapData() {
 
         const keysToRender = Object.keys(datum).filter(key => !(['_id', 'lat', 'lng'].includes(key)));
         marker.on('click', () => {
-            let updateString = '';
+            let updateString = `<div class="floaterDiv">${this.selectedType} :: Data Item</div>`;
             keysToRender.forEach(key => {
-                updateString += `<h4>${key}</h4><span>${datum[key]}</span>`;
+                updateString += `
+                    <div class="floaterDiv">
+                        <h4>${key}</h4><span>${datum[key]}</span>
+                    </div>
+                `;
             });
+            updateString += `
+                <button onclick="deleteItem(${"'" + this.selectedType + "'," + index + ",'" + datum["_id"] + "'"})">
+                    Delete
+                </button>
+            `;
             info.update(updateString);
         });
 
         marker.addTo(MAP);
-        MARKERS.push(marker);
+        this.typeDataHolder.markers.push(marker);
     });
 
-    createTypeAndItemsDisplay();
+    createTypeAndItemsDisplay(this.selectedType);
 }
 
-function deleteType() {
-    MARKERS.forEach(marker => marker.remove());
+function deleteItem(selectedType, index, id) {
+    TYPES_TO_SHOW.find(type => type.name === selectedType).markers[index].remove();
+    info.update();
 
-    const request = new XMLHttpRequest();
-    request.onload = () => window.location.reload();
-    request.open('GET', `http://127.0.0.1:3000/nuUpload/deleteType/${SELECTED_TYPE}`);
-    request.send();
+    console.log(`http://127.0.0.1:3000/deleteItem/${selectedType}/${id}`)
+    // const request = new XMLHttpRequest();
+    // request.open('GET', `http://127.0.0.1:3000/deleteItem/${SELECTED_TYPE}/${id}`);
+    // request.send();
 }
 
-function deleteItem(index, id) {
-    MARKERS[index].remove();
+const TYPE_LIST = document.getElementById('types');
+function createTypeAndItemsDisplay(selectedType) {
+    let selectedTypeId = `${selectedType}-li`;
+    if (document.getElementById(selectedTypeId) !== null) { return; }
 
-    const request = new XMLHttpRequest();
-    request.onload = () => getTypeData();
-    request.open('GET', `http://127.0.0.1:3000/nuUpload/deleteItem/${SELECTED_TYPE}/${id}`);
-    request.send();
-}
-
-const DISPLAY_DIV = document.getElementById('types');
-function createTypeAndItemsDisplay() {
-    let items_list = '';
-    MAP_DATA.forEach((datum, index) => {
-        let item = '';
-        const keysToRender = Object.keys(datum).filter(key => !(['_id', 'lat', 'lng'].includes(key)));
-        keysToRender.forEach(key => {
-            item += `<tr><td>${key}</td><td>${datum[key]}</td></tr>`;
-        });
-        items_list += `
-            <li>
-                ${'<table>' + item + '</table>'}
-                <button onclick="deleteItem(${index + ", '" + datum["_id"] + "'"})">Delete</button>
-            </li>
-        `;
-    });
-
-    DISPLAY_DIV.innerHTML = `
-        <h3>Items in '${SELECTED_TYPE}'</h3>
-        <button onclick="deleteType()">Delete</button>
-        <ul>${items_list}</ul>
+    TYPE_LIST.innerHTML += `
+        <li id="${selectedTypeId}">
+            <button onclick="deleteType('${selectedType}')">${selectedType}</button>
+        </li>
     `;
+}
+
+function deleteType(selectedType) {
+    let typeToRemove = TYPES_TO_SHOW.findIndex(type => type.name === selectedType);
+    if (typeToRemove < 0) { return; }
+
+    TYPES_TO_SHOW[typeToRemove].markers.forEach(marker => marker.remove());
+    TYPES_TO_SHOW.splice(typeToRemove,1);
+    TYPE_LIST.removeChild(document.getElementById(`${selectedType}-li`));
+
+    console.log(`http://127.0.0.1:3000/deleteType/${selectedType}`);
+    // const request = new XMLHttpRequest();
+    // request.onload = () => window.location.reload();
+    // request.open('GET', `http://127.0.0.1:3000/deleteType/${SELECTED_TYPE}`);
+    // request.send();
 }

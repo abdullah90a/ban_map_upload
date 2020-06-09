@@ -21,7 +21,7 @@ const markerFile = "public/uploads/marker";
 
 const upload = multer({ storage: diskStorage });
 
-router.get("/", (req, res) => res.render("nuUpload"));
+router.get("/index", (req, res) => res.render("nuUpload"));
 
 function respondWithTypes(res, viewName) {
   client.connect(err => {
@@ -108,6 +108,7 @@ router.get("/upsert", (req, res) => {
 
 router.post("/upsert", (req, res) => {
   console.log(req.body);
+  res.send("Data Updated!");
 });
 
 module.exports = router;

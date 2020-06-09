@@ -1,9 +1,28 @@
+#mapContainer {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1000px;
+}
+
 #map {
     height: 500px;
 }
 
+h4 {
+    margin: 0 0 0.25rem 0;
+    text-transform: capitalize;
+}
+
+li {
+    margin-top: 1rem;
+}
+
 #types {
     margin-top: 1rem;
+}
+
+.floaterDiv {
+    margin-bottom: 1rem;
 }
 
 .info {
