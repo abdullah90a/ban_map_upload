@@ -10,12 +10,13 @@ client.connect(function(err) {
     console.log("Connected successfully to server");
 
     const db = client.db("banDB");
-    const collection = db.collection('cities');
+    const collection = db.collection('Greater Earth');
 
-    collection.find({'city': "South Creek"}).toArray(function(err, docs) {
-        assert.equal(err, null);
-        console.log("Found the following records");
-        console.log(docs);
-        client.close();
-    });
+    collection.find().toArray((err, docs) => console.log(docs));
+    // collection.find({'city': "South Creek"}).toArray(function(err, docs) {
+    //     assert.equal(err, null);
+    //     console.log("Found the following records");
+    //     console.log(docs);
+    //     client.close();
+    // });
 });

@@ -1,0 +1,40 @@
+html
+    head
+        title Delivery Plans
+        link(rel="stylesheet" href="/stylesheets/customerStyles.css")
+    body
+        h1 Delivery Plans
+
+        select(name="customerSelect" id="customerSelect")
+            option(value="invalid") Select a Customer to view Plans
+            - for (var counter = 0; counter < customers.length; counter++)
+                option(value=customers[counter].name) #{customers[counter].name}
+
+        div(id="supplierPlans")
+
+        h1(class="uploadHeader") Upload Customer Sites
+        form(class="uploadForm" method="post" action="uploadCustomerSites" enctype="multipart/form-data")
+            div(class="nuUploadDiv")
+                label(class="nuUploadLabel" for="customer") Customer Name
+                input(type="text" id="customer" name="customer")
+            div(class="nuUploadDiv")
+                label(class="nuUploadLabel" for="customerCSV") Sites CSV
+                input(type="file" id="customerCSV" name="customerCSV")
+            div(class="nuUploadDiv")
+                input(type="submit" value="Upload")
+
+        h1(class="uploadHeader") Upload Supplier Sites
+        form(class="uploadForm" method="post" action="uploadSupplierSites" enctype="multipart/form-data")
+            div(class="nuUploadDiv")
+                label(class="nuUploadLabel" for="supplier") Supplier Name
+                input(type="text" id="supplier" name="supplier")
+            div(class="nuUploadDiv")
+                label(class="nuUploadLabel" for="cpm") Cost Per Mile
+                input(type="text" id="cpm" name="cpm")
+            div(class="nuUploadDiv")
+                label(class="nuUploadLabel" for="supplierCSV") Sites CSV
+                input(type="file" id="supplierCSV" name="supplierCSV")
+            div(class="nuUploadDiv")
+                input(type="submit" value="Upload")
+
+        script(src="/javascripts/customerScript.js")
